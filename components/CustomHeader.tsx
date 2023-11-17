@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useRef } from "react";
 import {
   View,
   Text,
@@ -11,6 +11,8 @@ import { SafeAreaView } from "react-native-safe-area-context";
 import { Ionicons } from "@expo/vector-icons";
 import Colors from "@/constants/Colors";
 import { Link } from "expo-router";
+import BottomSheet from "./BottomSheet";
+import { BottomSheetModal } from "@gorhom/bottom-sheet";
 
 const SearchBar = () => {
   return (
@@ -40,17 +42,26 @@ const SearchBar = () => {
 };
 
 const CustomHeader = () => {
+  const bottomSheetRef = useRef<BottomSheetModal>(null);
+  const openModal = () => {
+    if (bottomSheetRef.current) {
+      bottomSheetRef.current.present();
+    } else {
+      console.error("BottomSheet reference is not defined");
+    }
+  };
   return (
     <SafeAreaView style={styles.safeArea}>
+      <BottomSheet ref={bottomSheetRef} />
       <View style={styles.container}>
-        <TouchableOpacity>
+        <TouchableOpacity onPress={openModal}>
           <Image
             style={styles.bike}
             source={require("@/assets/images/bike.png")}
           />
         </TouchableOpacity>
 
-        <TouchableOpacity style={styles.titleContainer}>
+        <TouchableOpacity style={styles.titleContainer} onPress={openModal}>
           <Text style={styles.title}>Delivery · Now</Text>
           <View style={styles.locationName}>
             <Text style={styles.subtitle}>San Francisco</Text>
@@ -58,7 +69,7 @@ const CustomHeader = () => {
           </View>
         </TouchableOpacity>
 
-        <TouchableOpacity style={styles.profileButton}>
+        <TouchableOpacity style={styles.profileButton} onPress={openModal}>
           <Ionicons name="person-outline" size={20} color={Colors.primary} />
         </TouchableOpacity>
       </View>
